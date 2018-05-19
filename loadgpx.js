@@ -47,7 +47,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-function GPXParser(xmlDoc, map) {
+function GPXParser(xmlDoc, map, preloaded) {
     this.xmlDoc = xmlDoc;
     this.map = map;
     this.trackcolour = "#ff00ff"; // red
@@ -55,6 +55,7 @@ function GPXParser(xmlDoc, map) {
     this.mintrackpointdelta = 0.0001;
     this.markers = [];
     this.markerIndex = -1;
+    this.preloaded = preloaded;
 }
 
 // Set the colour of the track line segements.
@@ -197,7 +198,11 @@ GPXParser.prototype.createMarker = function(point) {
         icon: pin
     });
 
-    if (imageExist.length > 0){
+    if (this.preloaded == '' && imageExist.length > 0) {
+        index = html.indexOf('|');
+        html = "<img "+html.substring(0, index)+"><br>"+html.substring(index+1);
+    }
+    else if (imageExist.length > 0){
         html = "<div style=\"height:500px; width:640px; overflow: hidden;\">"+html+"</div>";
     }
     var infowindow = new google.maps.InfoWindow({

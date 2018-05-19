@@ -23,11 +23,11 @@
         <script type="text/javascript">
             //<![CDATA[
 
-            function loadGPXFileIntoGoogleMap(map, filename) {
+            function loadGPXFileIntoGoogleMap(map, filename, preloaded) {
                 $.ajax({url: filename,
                     dataType: "xml",
                     success: function(data) {
-                      var parser = new GPXParser(data, map);
+                      var parser = new GPXParser(data, map, preloaded);
                       parser.renderText(map);
                       parser.addEventListener('keydown', document, parser.handleKeyboardEvent);
                       parser.setTrackColour("#ff0000");     // Set the track line colour
@@ -51,7 +51,8 @@
                     mapOptions);
                 var url = new URL(window.location.href);
                 var filename = url.searchParams.get("filename");
-                loadGPXFileIntoGoogleMap(map, filename);
+                var preloaded = url.searchParams.get("preloaded");
+                loadGPXFileIntoGoogleMap(map, filename, preloaded);
             });
 
         //]]>
