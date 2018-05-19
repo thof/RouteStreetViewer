@@ -52,7 +52,9 @@ function GPXParser(xmlDoc, map) {
     this.map = map;
     this.trackcolour = "#ff00ff"; // red
     this.trackwidth = 5;
-    this.mintrackpointdelta = 0.0001
+    this.mintrackpointdelta = 0.0001;
+    this.markers = [];
+    this.markerIndex = -1;
 }
 
 // Set the colour of the track line segements.
@@ -83,6 +85,62 @@ GPXParser.prototype.translateName = function(name) {
     }
 }
 
+GPXParser.prototype.renderText = function(map) {
+    text_listener = google.maps.event.addListener(map, 'idle', function() {
+        var bounds = map.getBounds();
+        var ne = bounds.getNorthEast();
+        var sw = bounds.getSouthWest();
+        var pos_lng = Math.abs(ne.lng()-sw.lng())*0.1;
+        var pos_lat = Math.abs(ne.lat()-sw.lat())*0.02;
+        var mapLabel = new MapLabel({
+          text: 'Use page down and page up keys to switch between info windows',
+          position: new google.maps.LatLng(ne.lat()-pos_lat, sw.lng()+pos_lng),
+          map: map,
+          fontSize: 20,
+          fontColor: '#cc0000',
+          align: 'left'
+        });
+        google.maps.event.removeListener(text_listener);
+    });
+}
+
+GPXParser.prototype.addEventListener = function(evt, element, fn) {
+    if (window.addEventListener) {
+        element.addEventListener(evt, fn.bind(this), false);
+    }
+    else {
+        element.attachEvent('on'+evt, fn.bind(this));
+    }
+}
+
+GPXParser.prototype.handleKeyboardEvent = function(evt) {
+  if (!evt) {evt = window.event;} // for old IE compatible
+  var keycode = evt.keyCode || evt.which; // also for cross-browser compatible
+
+  var info = document.getElementById("info");
+  switch (keycode) {
+    // page up = switch to the next marker
+    case 33:
+      google.maps.event.trigger(this.markers[this.markerIndex], "close");
+      this.markerIndex = this.markerIndex + 1;
+      if(this.markerIndex > this.markers.length - 1) {
+        this.markerIndex = 0;
+      }
+      google.maps.event.trigger(this.markers[this.markerIndex], "open");
+      break;
+    // page down = switch to the previous marker
+    case 34:
+      google.maps.event.trigger(this.markers[this.markerIndex], "close");
+      this.markerIndex = this.markerIndex - 1;
+      if(this.markerIndex < 0) {
+        this.markerIndex = this.markers.length - 1;
+      }
+      google.maps.event.trigger(this.markers[this.markerIndex], "open");
+      break;
+    default:
+      // nothing
+  }
+}
 
 GPXParser.prototype.createMarker = function(point) {
     var lon = parseFloat(point.getAttribute("lon"));
@@ -119,11 +177,18 @@ GPXParser.prototype.createMarker = function(point) {
     }
 
     var imageExist = point.getElementsByTagName("exist");
-    if (imageExist.length > 0){
-        pin = this.pinSymbol('green')
+    var feature = point.getElementsByTagName("feature");
+    if (imageExist.length > 0 && feature.length > 0) {
+        pin = this.pinSymbol('#009933') // green
     }
-    else {
-        pin = this.pinSymbol('red')
+    else if (imageExist.length > 0) {
+        pin = this.pinSymbol('#66ff66') // light green
+    }
+    else if (feature.length > 0) {
+        pin = this.pinSymbol('#ff0000') // red
+    } else
+    {
+        pin = this.pinSymbol('#ff6666') // light red
     }
 
     var marker = new google.maps.Marker({
@@ -132,14 +197,49 @@ GPXParser.prototype.createMarker = function(point) {
         icon: pin
     });
 
+    if (imageExist.length > 0){
+        html = "<div style=\"height:500px; width:640px; overflow: hidden;\">"+html+"</div>";
+    }
     var infowindow = new google.maps.InfoWindow({
-        content: html,
-        size: new google.maps.Size(50,50)
+        content: html
     });
 
+    var parent = this
     google.maps.event.addListener(marker, "click", function() {
+        google.maps.event.trigger(parent.markers[parent.markerIndex], "close");
         infowindow.open(this.map, marker);
+        contentString = infowindow.getContent();
+        if(contentString.length > 58 && contentString.substring(58, 62).localeCompare("src=") == 0){
+            $.ajax({
+                success:function () {
+                    index = contentString.indexOf('|')
+                    contentString = contentString.substring(0, 58)+"<img "+contentString.substring(58, index)+"><br>"+contentString.substring(index+1, contentString.length-6)+"</div>";
+                    infowindow.setContent(contentString);
+                }
+            });
+        }
+        parent.markerIndex = parent.markers.indexOf(marker)
     });
+
+    google.maps.event.addListener(marker, "open", function() {
+        infowindow.open(this.map, marker);
+        contentString = infowindow.getContent();
+        if(contentString.length > 58 && contentString.substring(58, 62).localeCompare("src=") == 0){
+            $.ajax({
+                success:function () {
+                    index = contentString.indexOf('|')
+                    contentString = contentString.substring(0, 58)+"<img "+contentString.substring(58, index)+"><br>"+contentString.substring(index+1, contentString.length-6)+"</div>";
+                    infowindow.setContent(contentString);
+                }
+            });
+        }
+    });
+
+    google.maps.event.addListener(marker, "close", function() {
+        infowindow.close(this.map, marker);
+    });
+
+    return marker;
 }
 
 GPXParser.prototype.addTrackSegmentToMap = function(trackSegment, colour,
@@ -305,7 +405,7 @@ GPXParser.prototype.addTrackpointsToMap = function() {
 GPXParser.prototype.addWaypointsToMap = function() {
     var waypoints = this.xmlDoc.documentElement.getElementsByTagName("wpt");
     for(var i = 0; i < waypoints.length; i++) {
-        this.createMarker(waypoints[i]);
+        this.markers.push(this.createMarker(waypoints[i]));
     }
 }
 
@@ -317,12 +417,19 @@ GPXParser.prototype.addRoutepointsToMap = function() {
 }
 
 GPXParser.prototype.pinSymbol = function(color) {
+//    return {
+//        path: google.maps.SymbolPath.CIRCLE,
+//        scale: 6,
+//        strokeWeight: 1,
+//        fillColor: color,
+//        fillOpacity: 1
+//    };
     return {
         path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
         fillColor: color,
         fillOpacity: 1,
         strokeColor: '#000',
-        strokeWeight: 2,
-        scale: 1
+        strokeWeight: 1,
+        scale: 0.8
     };
 }
