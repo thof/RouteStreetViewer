@@ -62,3 +62,7 @@ Available parameters (all are mandatory):
 * **min_distance** - minimum distance between GeoJSON's features. If the distance between two waypoints is smaller than specified (in meters) by this parameter then such waypoint is discarded (default: 150)
 * **marker_gap** - if it's set to 2000 meters then there are three additional intermediate waypoints generated on 7000 meters long section (default: 2000) 
 * **min_marker_gap** - if the distance between two waypoints is smaller that **marker_gap** value but larger than this parameter then the script checks if there is a Street View image available in the center point between two featured waypoints anyway (default: 800)
+
+## Credits
+* [gpxviewer](https://github.com/peplin/gpxviewer)
+* [Map Label](https://github.com/googlemaps/js-map-label)
