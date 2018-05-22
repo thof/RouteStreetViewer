@@ -1,7 +1,7 @@
 # RouteStreetViewer
 
 ## About
-RouteStreetViewer tries to combine capabilities of two great technologies - [BRouter](https://github.com/nrenner/brouter-web) and [Google Street View](https://www.google.com/streetview/). It should be quite useful especially for cyclist who would like to preview created route before they start enjoying the ride.
+RouteStreetViewer tries to combine capabilities of two great technologies - [BRouter](https://github.com/nrenner/brouter-web) and [Google Street View](https://www.google.com/streetview/). It should be quite useful especially for cyclist who would like to preview created route before they start enjoying it during the ride.
 
 ## How it works?
 First you need to create a route using BRouter and export it to GeoJSON. Then RouteStreetViewer generates GPX file with Street View waypoints based on provided GeoJSON file. Afterwards you are ready to preview your track in web browser (see demos below).
