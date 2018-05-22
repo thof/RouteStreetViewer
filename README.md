@@ -1,7 +1,7 @@
 # RouteStreetViewer
 
 ## About
-RouteStreetViewer tries to combine capabilities of two great technologies - [BRouter](https://github.com/nrenner/brouter-web) and [Google Street View](https://www.google.com/streetview/). It should be quite useful especially for cyclist who would like to preview created route before they start enjoying the ride.
+RouteStreetViewer tries to combine capabilities of two great technologies - [BRouter](https://github.com/nrenner/brouter-web) and [Google Street View](https://www.google.com/streetview/). It should be quite useful especially for cyclist who would like to preview created route before they start enjoying it during the ride.
 
 ## How it works?
 First you need to create a route using BRouter and export it to GeoJSON. Then RouteStreetViewer generates GPX file with Street View waypoints based on provided GeoJSON file. Afterwards you are ready to preview your track in web browser (see demos below).
@@ -13,7 +13,7 @@ Sample routes:
 * [Route #1](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_1.xml&preloaded)
 * [Route #2](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_2.xml&preloaded)
 
-[![Demo screenshot](https://i.imgur.com/OAVvkZI.png)](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_mazury_7.xml)
+[![Demo screenshot](https://i.imgur.com/OAVvkZI.png)](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_2.xml&preloaded)
 
 ## UI navigation
 You can use mouse as usual with Google Maps or **Page Up** (next) and **Page Down** (previous) keys for switching between info windows. Using keys is probably the most convenient way of browsing entire track.
