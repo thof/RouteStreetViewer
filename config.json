@@ -1,0 +1,10 @@
+{
+    "api_key": "",
+    "file_counter": 0,
+    "fov": "105",
+    "marker_gap": 2000,
+    "min_distance": 150,
+    "min_marker_gap": 800,
+    "pitch": "-20",
+    "size": "640x480"
+}

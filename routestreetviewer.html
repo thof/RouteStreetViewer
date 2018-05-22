@@ -21,8 +21,6 @@
         <script src="loadgpx.js" type="text/javascript"></script>
         <script src="maplabel.js" type="text/javascript"></script>
         <script type="text/javascript">
-            //<![CDATA[
-
             function loadGPXFileIntoGoogleMap(map, filename, preloaded) {
                 $.ajax({url: filename,
                     dataType: "xml",
@@ -52,10 +50,8 @@
                 var url = new URL(window.location.href);
                 var filename = url.searchParams.get("filename");
                 var preloaded = url.searchParams.get("preloaded");
-                loadGPXFileIntoGoogleMap(map, filename, preloaded);
+                loadGPXFileIntoGoogleMap(map, "routes/"+filename, preloaded);
             });
-
-        //]]>
 </script>
 </head>
 <body>

@@ -198,12 +198,16 @@ GPXParser.prototype.createMarker = function(point) {
         icon: pin
     });
 
+    var loaded = false;
     if (this.preloaded == '' && imageExist.length > 0) {
         index = html.indexOf('|');
         html = "<img "+html.substring(0, index)+"><br>"+html.substring(index+1);
+        loaded = true;
     }
     else if (imageExist.length > 0){
         html = "<div style=\"height:500px; width:640px; overflow: hidden;\">"+html+"</div>";
+    } else {
+        loaded = true;
     }
     var infowindow = new google.maps.InfoWindow({
         content: html
@@ -213,8 +217,9 @@ GPXParser.prototype.createMarker = function(point) {
     google.maps.event.addListener(marker, "click", function() {
         google.maps.event.trigger(parent.markers[parent.markerIndex], "close");
         infowindow.open(this.map, marker);
-        contentString = infowindow.getContent();
-        if(contentString.length > 58 && contentString.substring(58, 62).localeCompare("src=") == 0){
+        if(!loaded){
+            loaded = true;
+            contentString = infowindow.getContent();
             $.ajax({
                 success:function () {
                     index = contentString.indexOf('|')
@@ -228,8 +233,9 @@ GPXParser.prototype.createMarker = function(point) {
 
     google.maps.event.addListener(marker, "open", function() {
         infowindow.open(this.map, marker);
-        contentString = infowindow.getContent();
-        if(contentString.length > 58 && contentString.substring(58, 62).localeCompare("src=") == 0){
+        if(!loaded){
+            loaded = true;
+            contentString = infowindow.getContent();
             $.ajax({
                 success:function () {
                     index = contentString.indexOf('|')
