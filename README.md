@@ -1,17 +1,17 @@
 # RouteStreetViewer
 
 ## About
-RouteStreetViewer tries to combine capabilities of two well-known tools - [BRouter](https://github.com/nrenner/brouter-web) and [Google Street View](https://www.google.com/streetview/). It should be quite useful especially for cyclist who would like to preview created route before they start enjoying the ride.
+RouteStreetViewer tries to combine capabilities of two great technologies - [BRouter](https://github.com/nrenner/brouter-web) and [Google Street View](https://www.google.com/streetview/). It should be quite useful especially for cyclist who would like to preview created route before they start enjoying the ride.
 
 ## How it works?
-First you need to create a route using BRouter and export it to GeoJSON. Then RouteStreetViewer generates GPX file with Street View waypoints based on provided GeoJSON file. Afterwards you are ready to preview your track in web browser (see Demos below).
+First you need to create a route using BRouter and export it to GeoJSON. Then RouteStreetViewer generates GPX file with Street View waypoints based on provided GeoJSON file. Afterwards you are ready to preview your track in web browser (see demos below).
 
 [GeoJSON](https://en.wikipedia.org/wiki/GeoJSON) is an open standard format designed for representing simple geographical **features**.
 
-## Demo
+## Demos
 Sample routes:
-* [Route #1](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_mazury_7.xml&preloaded)
-* [Route #2](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_mazury_7.xml&preloaded)
+* [Route #1](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_1.xml&preloaded)
+* [Route #2](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_2.xml&preloaded)
 
 [![Demo screenshot](https://i.imgur.com/OAVvkZI.png)](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_mazury_7.xml)
 
@@ -46,7 +46,7 @@ RouteStreetViewer.py expects two arguments:
 * Configuration file name (optional, default: config.json)
 
 1. Start Python HTTP server: `python3 -m http.server` 
-1. Run RouteStreetViewer: `python RouteStreetViewer.py brouter_mazury.geojson config.json`
+1. Run RouteStreetViewer: `python RouteStreetViewer.py input_geojson/brouter_route.geojson config.json`
 1. When it's done you will get the URL. Run it with Chromium or Firefox.
 
 ## Query string
