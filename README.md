@@ -13,7 +13,7 @@ Sample routes:
 * [Route #1](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_1.xml&preloaded)
 * [Route #2](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_2.xml&preloaded)
 
-[![Demo screenshot](https://i.imgur.com/OAVvkZI.png)](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_mazury_7.xml)
+[![Demo screenshot](https://i.imgur.com/OAVvkZI.png)](https://rawgit.com/thof/RouteStreetViewer/master/routestreetviewer.html?filename=brouter_demo_2.xml&preloaded)
 
 ## UI navigation
 You can use mouse as usual with Google Maps or **Page Up** (next) and **Page Down** (previous) keys for switching between info windows. Using keys is probably the most convenient way of browsing entire track.
