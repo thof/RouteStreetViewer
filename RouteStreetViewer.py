@@ -148,20 +148,26 @@ class RouteStreetViewer:
         vec_a = []
         vec_b = []
         index = self.find_elem(longitude, latitude, coordinates_array)
-        longitude_next = coordinates_array[index + 1][0]
-        latitude_next = coordinates_array[index + 1][1]
-        vec_a.append(longitude_next * 1000000 - longitude * 1000000)
-        vec_a.append(latitude_next * 1000000 - latitude * 1000000)
-        vec_b.append(0)
-        vec_b.append(abs(vec_a[1]))
-        dot_product = vec_a[1] * vec_b[1]
-        len_a = math.sqrt(vec_a[0] * vec_a[0] + vec_a[1] * vec_a[1])
-        len_b = math.sqrt(vec_b[1] * vec_b[1])
-        cos = dot_product / (len_a * len_b)
-        angle = math.acos(cos) * 180 / 3.14
-        if vec_a[0] < 0:
-            angle = 360 - angle
-        return int(angle)
+        while True:
+            vec_a = []
+            vec_b = []
+            longitude_next = coordinates_array[index + 1][0]
+            latitude_next = coordinates_array[index + 1][1]
+            vec_a.append(longitude_next * 1000000 - longitude * 1000000)
+            vec_a.append(latitude_next * 1000000 - latitude * 1000000)
+            vec_b.append(0)
+            vec_b.append(abs(vec_a[1]))
+            dot_product = vec_a[1] * vec_b[1]
+            len_a = math.sqrt(vec_a[0] * vec_a[0] + vec_a[1] * vec_a[1])
+            len_b = math.sqrt(vec_b[1] * vec_b[1])
+            if len_a == 0.0 or len_b == 0.0:
+                index = index + 1
+                continue
+            cos = dot_product / (len_a * len_b)
+            angle = math.acos(cos) * 180 / 3.14
+            if vec_a[0] < 0:
+                angle = 360 - angle
+            return int(angle)
 
     def create_street_view_elem(self, longitude, latitude, elevation, angle, image_exist, notes, feature=False):
         street_view = [longitude, latitude, elevation]
